@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>도트메트릭스 코딩프로그램</title>
+	<link rel="stylesheet" href="">
+	<style>
+                                .black{ background-color: black; width: 10px;}
+			textarea{position: absolute;}
+			.test{       background-color: white;
+				   width: 10px; height: 10px;
+                        cursor:default;
+				   border:1px solid black;
+				   position: absolute;
+				   top: 10px; left: 10px;}
+			.inp{ width: 30px;}
+			.root{
+                     background-color: lightgreen;
+				position: relative;
+                     font-size: 10px;
+                     height: auto; width: auto;
+			}
+                                .colors{width: 80px;}
+                                #result{ position: absolute; }
+                                #Tbox{ position: absolute; }
+	</style>
+	<script>
+            var baseColor = "white";
+            var hitColor = "black"
+
+                    var garo=0;
+                    var sero=0;
+                    var clearCount=0;
+                    var makeCount=0;
+                    var getCodeCount = 0;
+                    var anicount =  0;
+                    var slidingCount=0;
+                    var id;
+                    var fspd = 100;
+                                var Realrecord = new Array();
+                                var recodeArr = new Array();
+			var pixels = new Array();
+			// function changeBG(val){
+			// 	document.getElementById("test"+val).style.backgroundColor = "yellow";
+			// }
+			function changeBG(val){
+                      if(window.event.which==1){
+        				if(document.getElementById("test"+val).style.backgroundColor==hitColor){
+        				document.getElementById("test"+val).style.backgroundColor = baseColor;
+        				}else{
+        					document.getElementById("test"+val).style.backgroundColor = hitColor;
+        				}
+                      }
+			}
+                function changeBG1(val){
+                        if(document.getElementById("test"+val).style.backgroundColor==hitColor){
+                        document.getElementById("test"+val).style.backgroundColor = baseColor;
+                        }else{
+                          document.getElementById("test"+val).style.backgroundColor = hitColor;
+                        }
+                }
+			function changeBack(val){
+				document.getElementById("test"+val).style.backgroundColor = baseColor;
+			}
+			function Clear(){
+                                          if(clearCount==0){ alert("make a matrix first!!"); return; }
+                                          clearCount++;
+				for (var i = 0; i < pixels.length; i++) {
+					document.getElementById("test"+i).style.backgroundColor = baseColor;
+				};
+			}
+			function makeTable(col,row){
+				var colsize = 10;
+				var rowsize = 10;
+				var num = col*row;
+				var colposition=0;
+				var rowposition=0;
+				// alert(num);
+				for (var i = 0; i < num; i++) {
+					pixels[i] = i;
+					document.getElementById("make").innerHTML += "<div class='test' id='test"+i+"'' onmouseover='changeBG("+i+")' onclick='changeBG1("+i+")'  ondragstart = 'return false'></div>";
+
+						// if(i%col==0){colposition=0;rowposition+=rowsize;}
+						// document.getElementById("test"+i).style.left = colposition+"px";
+						// colposition+=colsize;
+						// document.getElementById("test"+i).style.top = rowposition+"px";
+					// document.getElementById("test"+i).style.top =
+						}
+				// document.F1.result.style.top= rowsize*row+"px";
+
+			}
+			function positoning(col,row){
+				var colsize = 10;
+				var rowsize = 10;
+				var num = col*row;
+				var colposition=0;
+				var rowposition=0;
+				// alert(num);
+				for (var i = 0; i < num; i++) {
+						if(i%col==0){colposition=0;rowposition+=rowsize;}
+						document.getElementById("test"+i).style.left = colposition+"px";
+						colposition+=colsize;
+						document.getElementById("test"+i).style.top = rowposition+"px";
+					// document.getElementById("test"+i).style.top =
+						}
+				// document.F1.result.style.top= rowsize*row+"px";
+			}
+			function building(){
+				var col = document.F1.dotcol.value;
+				var row = document.F1.dotrow.value;
+                                         clearCount++;
+                                         garo = col; sero=row;
+                                         if(makeCount>0){ alert("push 'refresh' then make new matrix"); return; }
+                                         if(isNaN(col+row)||col==""||row==""){ alert("fill nums in Cols and Rows.");return; }
+				var total = col*row;
+				makeTable(col,row);
+				positoning(col,row);
+                                          Clear();
+                                          document.getElementById("content").innerHTML="";
+                                          makeCount++;
+			}
+                                function exBgc(){
+                                    baseColor = document.F1.exBg.value;
+                                    Clear();
+                                }
+                                function exHitc(){
+                                    var index = document.F1.exHit.selectedIndex;
+                                    hitColor = document.F1.exHit.options[index].value;
+                                }
+                                  function exHitc2(){
+                                    hitColor = document.F1.colors.value;
+                                }
+                                function removeLine(){
+                                    if(pixels[0]==null){alert("make a matrix first!!"); return;}
+                                    for (var i = 0; i < pixels.length; i++) {
+                                      document.getElementById("test"+i).style.border="0px";
+                                    };
+                                }
+                                function refresh(){
+                                    location.reload();
+                                }
+                                function getCode(){
+                                    //2진데이터배열만들기
+                                    if(pixels[0]==null){alert("make a matrix first!!"); return;}
+                                    var arrData = new Array();
+                                    var temp = "";
+                                    var count =0;
+                                    var count1 =0;
+                                    var one = "1";
+                                    var zero = "0";
+                                        for (var i = 0; i < garo; i++) {
+                                            for (var j = 0; j < sero; j++) {
+                                                var num = i+garo*j;
+                                                // alert("num = "+count1);
+                                                // alert(document.getElementById("test"+count1).style.backgroundColor);
+
+                                                    if( document.getElementById("test"+num).style.backgroundColor == "white"){
+                                                        temp=temp.concat(zero);
+                                                        // alert(temp);
+                                                    }else{
+                                                        temp=temp.concat(one);
+                                                        // alert(temp);
+                                                    }
+                                                    count1++;
+                                                    if(temp.length==sero){
+                                                        // alert(temp+"check");
+                                                        console.log(temp);
+                                                        arrData[count] = temp;
+                                                        count++;
+                                                        temp="";
+                                                    }
+                                            };
+                                        };
+                                        document.getElementById("result").innerHTML += "<hr>";
+                                        document.getElementById("result").innerHTML += "<input type='button' name='showBack' value='showBack("+Number(getCodeCount)+")' onclick='showback("+Number(getCodeCount)+")'><input type='button' name='sliding' value='Left("+Number(getCodeCount)+") 1step' onclick='slidingLeft("+Number(getCodeCount)+")'><input type='button' name='' value='play/stop to Left' onclick='Leftplay("+Number(getCodeCount)+")'><input type='button' name='sliding' value='Right("+Number(getCodeCount)+") 1step' onclick='slidingRight("+Number(getCodeCount)+")'><input type='button' name='' value='play/stop to Right' onclick='Rightplay("+Number(getCodeCount)+")'><br>"+arrData.join(", ");
+                                        recodeArr[Number(getCodeCount)] = arrData.join(",");
+
+
+                                        document.getElementById("result").style.top = sero*12+"px";
+                                        // alert( recodeArr[Number(getCodeCount)]);
+                                        Realrecord[Number(getCodeCount)] = recodeArr[Number(getCodeCount)].split(",");
+                                           getCodeCount++;
+                                        // alert("in order to get array, make matrix to minimum size..");
+                                        var resultHeight = document.getElementById("result").offsetHeight;
+                                        resultHeight = resultHeight+sero*12;
+                                        document.getElementById("Tbox").style.top = resultHeight+"px";
+                                        document.getElementById("Tbox").innerHTML=  "<h2>input/output Data</h2><input type='button' name='' value='decode' onclick='decode()'>Make sure Array below fits matrix above and no space around Array.<br>if you want to remove middle of animation, delet the whole line for it.<br><textarea name='inputCode' id='inputCode' cols='60' rows='10'></textarea>";
+                                }
+                                function changeSize(){
+                                       var Size = document.getElementById("range").value;
+                                       // alert(Size);
+                                       for (var i = 0; i < pixels.length; i++) {
+
+                                           document.getElementById("test"+i).style.width = Size+"px";
+                                           document.getElementById("test"+i).style.height = Size+"px";
+                                       };
+                                       repositoning(Size);
+                                }
+                                function repositoning(Size){
+                                    var num = pixels.length;
+                                    // alert(num);
+                                    var colposition=0;
+                                    var rowposition=0;
+                                    // alert(num);
+                                    for (var i = 0; i < num; i++) {
+                                            if(i%garo==0){colposition=0;rowposition+=Number(Size);}
+                                            document.getElementById("test"+i).style.left = colposition+"px";
+                                            colposition+=Number(Size);
+                                            // alert("popp");
+                                            document.getElementById("test"+i).style.top = rowposition+"px";
+                                        // document.getElementById("test"+i).style.top =
+                                            }
+                                    // document.F1.result.style.top= rowsize*row+"px";
+                                }
+                                function showback(num){
+                                    // alert(Realrecord[num]+"\ngaro,sero ="+garo+sero);
+                                    slidingCount = 0;
+                                    var sbcount = 0;
+                                    for (var i = 0; i < garo; i++) {
+                                        var insidei = i;
+                                       for (var j = 0; j < sero; j++) {
+                                        // alert(Realrecord[num][i]);
+                                             if(Realrecord[num][i].charAt(j)==0){
+                                            document.getElementById("test"+insidei).style.backgroundColor = baseColor; }
+                                            else{ document.getElementById("test"+insidei).style.backgroundColor = hitColor; }
+                                            insidei+=Number(garo);
+                                           // alert("insidei="+insidei);
+                                          }
+                                       };
+                                        sbcount++;
+                                }
+var swi = false;
+                                function animation(){
+                                    if(swi==false){
+                                    // alert(Realrecord.length);
+                                    if(Realrecord.length==0){
+                                        alert("getCode first!!");return;
+                                    }
+                                   id =setInterval(nothing, fspd);
+                                     }
+                                        // alert("카운트수"+anicount+"\n배열길이"+Realrecord.length);
+
+                                    // if(anicount==Realrecord.length){
+                                    //     clearInterval(id);
+                                    //     anicount=0;
+                                    // }
+                                }
+                                function nothing(){
+                                        Realrecord.length;
+                                        showback(anicount);
+                                        anicount++;
+                                        swi = true;
+                                         if(anicount==Realrecord.length){
+                                                clearInterval(id);
+                                                anicount=0;
+                                                swi = false;
+                                         }
+                                        // alert("카운트수"+anicount+"\n배열길이"+Realrecord.length);
+                                }
+                                function frameSpeed(){
+                                     fspd = document.F1.speedNo.value;
+                                     alert("frame speed changed..")
+                                }
+                                function test(){
+                                    // document.getElementById("result").innerHTML += "<hr><br><h1>Result Array below</h1>"+Realrecord.join("\n");
+                                    document.getElementById("inputCode").value = "";
+                                    document.getElementById("inputCode").value = Realrecord.join("\n");
+
+                                }
+                                function checkheight(){
+                                alert(document.getElementById("result").offsetHeight);
+                                }
+var ArrForDecod = new Array();
+                                function decode(){
+                                  if(document.getElementById("inputCode").value==""){ alert("do encode or fill Array in textarea.");return;}
+                                  var TempArr01 = new Array();
+                                  var TempArr02 = new Array();
+                                  var val = document.getElementById("inputCode").value;
+                                  TempArr01 = val.split("\n");
+                                  for (var i = 0; i < TempArr01.length; i++) {
+                                      TempArr02[i] = TempArr01[i].split(",");
+                                  };
+                                  // alert(TempArr02);
+                                  Realrecord = new Array();
+                                  document.getElementById("result").innerHTML = "";
+                                  for (var i = 0; i < TempArr02.length; i++) {
+                                    ArrForDecod[i] = TempArr02[i];
+                                    Realrecord[i] = ArrForDecod[i];
+                                    document.getElementById("result").innerHTML += "<hr><input type='button' name='' value='decode to matrix("+i+")' onclick='decTomatrix("+i+")'>&nbsp; &nbsp; &nbsp; "+TempArr02[i].join(",");
+                                  };
+
+                                  var resultHeight = document.getElementById("result").offsetHeight;
+                                        resultHeight = resultHeight+sero*12;
+                                        document.getElementById("Tbox").style.top = resultHeight+"px";
+                                }
+                                function decTomatrix(num){
+                                    // alert(Realrecord[num]+"\ngaro,sero ="+garo+sero);
+                                    var sbcount = 0;
+                                    for (var i = 0; i < garo; i++) {
+                                        var insidei = i;
+                                       for (var j = 0; j < sero; j++) {
+                                        // alert(Realrecord[num][i]);
+                                             if(ArrForDecod[num][i].charAt(j)==0){
+                                            document.getElementById("test"+insidei).style.backgroundColor = baseColor; }
+                                            else{ document.getElementById("test"+insidei).style.backgroundColor = hitColor; }
+                                            insidei+=Number(garo);
+                                           // alert("insidei="+insidei);
+                                          }
+                                       };
+                                        sbcount++;
+                                }
+// var slidingArr = new Array();
+//                                 function slidingLeft0(num){
+//                                     slidingCount++;
+//                                     if(slidingCount==garo){slidingCount=1;}
+//                                     var newSero = "";
+//                                     if(slidingCount==1){ slidingArr = Realrecord[num].slice(); }
+//                                      for (var i = 0; i < sero; i++) {
+//                                                newSero += "0";
+//                                     };
+//                                     slidingArr.shift();
+
+//                                     slidingArr[garo-1] = newSero;
+//                                     // alert(newSero);
+//                                     for (var i = 0; i < garo; i++) {
+//                                         var insidei = i;
+//                                        for (var j = 0; j < sero; j++) {
+//                                         // alert(Realrecord[num][i]);
+//                                              if(slidingArr[i].charAt(j)==0){
+//                                             document.getElementById("test"+insidei).style.backgroundColor = baseColor; }
+//                                             else{ document.getElementById("test"+insidei).style.backgroundColor = hitColor; }
+//                                             insidei+=Number(garo);
+//                                            // alert("insidei="+insidei);
+//                                           }
+//                                        };
+//                                 }
+// var temparr = new Array();
+//                                 function slidingRight0(num){
+//                                     slidingCount++;
+//                                     if(slidingCount==garo){slidingCount=1;}
+//                                     var newSero = "";
+//                                           for (var i = 0; i < sero; i++) {
+//                                                    newSero += "0";
+//                                         };
+//                                     if(slidingCount==1){ slidingArr = Realrecord[num].slice(); }
+//                                     slidingArr.splice(0,0,newSero);
+
+//                                     // alert(slidingArr);
+//                                     // slidingArr[0] = newSero;
+//                                     // alert(newSero);
+//                                     for (var i = 0; i < garo; i++) {
+//                                         var insidei = i;
+//                                        for (var j = 0; j < sero; j++) {
+//                                         // alert(Realrecord[num][i]);
+//                                              if(slidingArr[i].charAt(j)==0){
+//                                             document.getElementById("test"+insidei).style.backgroundColor = baseColor; }
+//                                             else{ document.getElementById("test"+insidei).style.backgroundColor = hitColor; }
+//                                             insidei+=Number(garo);
+//                                            // alert("insidei="+insidei);
+//                                           }
+//                                        };
+//                                 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var slidingArr01 = new Array();
+var slidingArr02 = new Array();
+                                function slidingLeft(num){
+
+                                    if(slidingCount==garo*2+1){slidingCount=0;}
+                                    var newSero = "";
+                                     for (var i = 0; i < sero; i++) {
+                                               newSero += "0";
+                                    };
+                                    slidingArr02 = Realrecord[num].slice();
+                                    for (var i = 0; i < garo; i++) {
+                                       slidingArr01[i] = newSero;
+                                    };
+
+                                    if(slidingCount<Number(garo)+1){
+                                       slidingArr01=slidingArr01.slice(0,garo-slidingCount);
+                                       slidingArr02=slidingArr02.slice(0,slidingCount);
+                                       slidingArr01=slidingArr01.concat(slidingArr02);
+                                    }else{
+                                       slidingArr02=slidingArr02.slice((slidingCount-garo),garo);
+                                       slidingArr01=slidingArr01.slice(0,(slidingCount-garo));
+                                       slidingArr01=slidingArr02.concat(slidingArr01);
+                                    }
+                                        slidingCount++;
+                                        // alert(slidingArr01);
+                                    // slidingArr.shift();
+
+                                    // slidingArr[garo-1] = newSero;
+                                    // alert(newSero);
+                                    for (var i = 0; i < garo; i++) {
+                                        var insidei = i;
+                                       for (var j = 0; j < sero; j++) {
+                                        // alert(Realrecord[num][i]);
+                                             if(slidingArr01[i].charAt(j)==0){
+                                            document.getElementById("test"+insidei).style.backgroundColor = baseColor; }
+                                            else{ document.getElementById("test"+insidei).style.backgroundColor = hitColor; }
+                                            insidei+=Number(garo);
+                                           // alert("insidei="+insidei);
+                                          }
+                                       };
+                                }
+var slidingArr03 = new Array();
+var slidingArr04 = new Array();
+                                function slidingRight(num){
+
+                                    if(slidingCount==garo*2+1){slidingCount=0;}
+                                    var newSero = "";
+                                     for (var i = 0; i < sero; i++) {
+                                               newSero += "0";
+                                    };
+                                    slidingArr04 = Realrecord[num].slice();
+                                    for (var i = 0; i < garo; i++) {
+                                       slidingArr03[i] = newSero;
+                                    };
+                                    // alert("slidingCount="+slidingCount);
+                                    if(slidingCount<Number(garo)+1){
+                                       slidingArr03=slidingArr03.slice(0,slidingCount);
+                                       slidingArr04=slidingArr04.slice(0,garo-slidingCount);
+                                       slidingArr03=slidingArr03.concat(slidingArr04);
+                                    }else{
+                                       slidingArr04=slidingArr04.slice(garo-(slidingCount-garo),garo);
+                                       // alert(slidingArr04);
+                                       slidingArr03=slidingArr03.slice(0,garo-(slidingCount-garo));
+                                       slidingArr03=slidingArr04.concat(slidingArr03);
+                                    }
+                                        slidingCount++;
+
+
+
+
+                                    for (var i = 0; i < garo; i++) {
+                                        var insidei = i;
+                                       for (var j = 0; j < sero; j++) {
+                                        // alert(Realrecord[num][i]);
+                                             if(slidingArr03[i].charAt(j)==0){
+                                            document.getElementById("test"+insidei).style.backgroundColor = baseColor; }
+                                            else{ document.getElementById("test"+insidei).style.backgroundColor = hitColor; }
+                                            insidei+=Number(garo);
+                                           // alert("insidei="+insidei);
+                                          }
+                                       };
+                                }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var Leftstate = true;
+var Rightstate = true;
+                                function Leftplay(num){
+                                    if(Leftstate==true){ id = setInterval('slidingLeft('+num+')', fspd); Leftstate = false;}
+                                    else{clearInterval(id); Leftstate = true;}
+                                }
+                                function Rightplay(num){
+                                    if(Rightstate==true){ id2 = setInterval('slidingRight('+num+')', fspd); Rightstate = false;}
+                                    else{clearInterval(id2); Rightstate = true;}
+                                }
+
+
+
+
+
+	</script>
+</head>
+<body>
+<h1>Dot matrix array maker</h1>
+<form action="" name="F1">
+	Cols: <input class="inp" type="text" name="dotcol" value="" placeholder="">
+	Rows: <input class="inp" type="text" name="dotrow" value="" placeholder="">
+	<input type="button" onclick="building()" name="" value="make">
+	<input type="button" onclick="Clear()" name="" value="clear">
+            <!--input class="colors" type="text" name="exBg" value="" placeholder="type color string in CSS">
+            <input type="button" onclick="exBgc()" name="" value="bgcolor change"-->
+
+              <!--input class="colors" type="text" name="exHit" value="" placeholder="type color string in CSS"-->
+              <!--select name="exHit" id="" size="1" onchange="exHitc()">
+                  <option value="black">black</option>
+                  <option value="red">red</option>
+                  <option value="green">green</option>
+                  <option value="blue">blue</option>
+                  <option value="pink">pink</option>
+                  <option value="lightgreen">lightgreen</option>
+                  <option value="lightblue">lightblue</option>
+                  <option value="brown">brown</option>
+              </select-->
+            <input type="button" name="" value="removeLine" onclick="removeLine()">
+            <br>
+            <input type="button" name="" value="refresh" onclick="refresh()">
+            <input type="button" name="" value="getCode" onclick="getCode()">
+            <input type="button" name="" value="▶animation" onclick="animation()">
+            <input class="inp" type="text" name="speedNo" value="100" placeholder="">
+            <input type="button" name="" value="FrameSpeed" onclick="frameSpeed()">
+            <br>
+            <input type="range" name="" id="range" value="10" placeholder="size" min="10" max="30" step="2" onchange="changeSize()">
+              <input type="color" name="colors" value="" placeholder="" onchange="exHitc2()">
+             <input type="button" name="" value="encode" onclick="test()">(generate codeArray to textarea blow)
+             <!--input type="button" name="" value="checkHeight" onclick="checkheight()"-->
+
+
+	<div class="root" id="make">
+                <div id="result"></div>
+                <div id="Tbox">
+                <!--textarea name="inputCode" id="inputCode" cols="30" rows="10"></textarea-->
+                </div>
+            </div>
+
+	<!--textarea name="result" id="result" cols="50" rows="20"></textarea-->
+</form>
+<div id="content">
+This app for making an array for 8*8 dotmatrix. it can make any size of dotmatrix as well. <br>
+but it prefer to use less than 48*16. because of the memory size of browser.. <br>
+you can change a color of pixels when you click it. but it(array) doen't offer for RGB-matrix. <br>
+for RGB is comming soon...
+</div>
+<div id="ggg"></div>
+</body>
+</html>
