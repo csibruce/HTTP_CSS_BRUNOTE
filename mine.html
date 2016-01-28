@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<title></title>
+	<script type="text/javascript">
+		//readyfunction
+		$(function(){
+			//지뢰영역 설정(10x10)
+			var x = 0;
+			var y = 0;
+			var s = 20; //지뢰영역 사이즈
+			var positionMaker = 0;
+			for (var i = 0; i < 100; i++) {
+				if(i%10==0&&i!=0){positionMaker += 10; }
+				if(i%10==0&&i!=0){y += 20; }
+				x = s*(i-positionMaker);
+				$('#mineArea').append('<div id="'+i+'" style="position:absolute; border:1px solid black; width:20px; height:20px; top:'+y+'px; left:'+x+'px;"></div>');	
+			}
+			
+		});
+
+		//지뢰영역(10x10)에 지뢰심기 -> 빈칸에 숫자 채워넣기
+		function setMines(){
+			
+			var num = $('#mineCnt').val();
+			if(num==""){alert("지뢰수를 입력하세요");return;}
+			var mines = new Array();
+
+			//입력받은 수 랜덤하게 지뢰심을 장소를 뽑는다.
+			while(mines.length<num){
+				var mine = Math.floor((Math.random() * 100));
+				for(var i = 0; i < mines.length; i++){
+					if(mine==mines[i]){
+						break;
+					}
+				}
+				mines.push(mine);
+			}
+			//지뢰가 심어질 장소에 지뢰를 심는다 X표시 -> 지뢰
+			for (var i = 0; i < mines.length; i++) {
+				var str = "#"+mines[i];
+				$(str).html('<font color=red>X</font>');
+			};
+
+
+			//지뢰가 심어지지 않은 장소에 지뢰정보를 나타내는 숫자를 입력한다.
+			for (var i = 0; i < 100; i++) {
+				var center = i; 
+				var cnt = 0;
+				var comp;
+				var passTicket = true;
+				for (var k = 0; k < mines.length; k++) {
+					if(center==mines[k]){
+						passTicket = false;
+					}
+				};
+				if(passTicket){
+					for (var j = 0; j < 9; j++) {
+						if(j==0){ comp = i-11; }
+						if(j==1){ comp = i-10; }
+						if(j==2){ comp = i-9;  }
+						if(j==3){ comp = i-1;  }
+						if(j==4){ comp = i;    }
+						if(j==5){ comp = i+1;  }
+						if(j==6){ comp = i+9;  }
+						if(j==7){ comp = i+10; }
+						if(j==8){ comp = i+11; }
+						if(comp<100&&comp>-1){
+							comp = "#" + comp;
+							if($(comp).text()=="X"){
+								cnt++;
+							}
+						}
+					};
+					center = "#" + center;
+					$(center).text(cnt); 
+				}
+			};
+
+
+
+		}
+	</script>
+	<style type="text/css">
+		#mineArea{
+				width: 200px;
+				height: 200px;
+				position: relative;
+				background-color: yellow;
+		}
+	</style>
+</head>
+<body>
+
+<div id="mineArea"></div>
+<input id="mineCnt" type="number"><button onclick="setMines()">set</button>
+</body>
+</html>
